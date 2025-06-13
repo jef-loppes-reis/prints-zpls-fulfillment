@@ -1,0 +1,26 @@
+[project]
+name = "prints-zpls-fulfillment"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "jef-loppes-reis", email = "jefersondip25@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "customtkinter>=5.2.2",
+    "ecomm",
+    "pandas>=2.3.0",
+    "print-log",
+    "python-dotenv>=1.1.0",
+    "rich>=14.0.0",
+    "win32printing>=0.1.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+ecomm = { git = "https://github.com/e-commerce-Pecista/ecomm-tools" }
+print-log = { git = "https://github.com/jef-loppes-reis/print-log" }
