@@ -8,6 +8,7 @@ from prints_zpls_fulfillment.interfaces.user_repository import UserRepository
 load_dotenv()
 
 class EnvUserRepository(UserRepository):
+
     def __init__(self):
         self.users = {}
         self.load_users_from_env()
@@ -23,4 +24,4 @@ class EnvUserRepository(UserRepository):
 
     def get_user_by_username(self, username: str) -> User:
         """Retorna o usuário pelo nome de usuário"""
-        return self.users.get(username)
+        return self.users.get(username, '0000')

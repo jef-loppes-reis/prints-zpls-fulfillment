@@ -1,3 +1,8 @@
+"""
+    Modulo para mandar os comandos de impressao e Update na tabela
+    "ECOMM".etiqueta_full
+"""
+
 from datetime import datetime
 
 from pandas import DataFrame
@@ -24,12 +29,16 @@ class ProcessLabelUseCase:
 
         # Passo 3: Imprimir o código ZPL
         product_data: DataFrame = self.product_repository.find_product_by_barcode(ean)
-        print(product_data)
+
         if product_data.empty:
             return {}
+
         product_data_dict = product_data.to_dict('records')[0]
         zpl_code: str = product_data_dict.get('zpl_code', '')
-        # self.print_label(zpl_code)
+
+        # Comando para imprimir
+        self.print_label(zpl_code)
+
         # Passo 4: Atualizar o status da impressão no banco de dados
         self.update_product_status(
             id_db=product_data_dict.get('idx_etq', 0),
@@ -39,12 +48,17 @@ class ProcessLabelUseCase:
         )
         return product_data_dict
 
-
     def print_label(self, zpl_code: str) -> None:
         """Imprime a etiqueta usando a impressora Zebra"""
         self.zebra_printer.print_label(bytes(zpl_code, encoding='utf-8'))
 
-    def update_product_status(self, id_db: int, coduser: str, data_validade: str, codml: str) -> None:
+    def update_product_status(
+            self,
+            id_db: int,
+            coduser: str,
+            data_validade: str,
+            codml: str
+        ) -> None:
         """Atualiza o status do produto no banco de dados após a impressão"""
         __zpl_code_data_validade: str = 'null' if not data_validade else data_validade
         update_query = f"""
