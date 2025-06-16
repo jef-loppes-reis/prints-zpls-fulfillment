@@ -1,3 +1,4 @@
+```bash
 my_project/
 │
 ├── src/
@@ -27,3 +28,4 @@ my_project/
 ├── requirements.txt              # Dependências do projeto
 ├── README.md                     # Documentação do projeto
 └── .gitignore                    # Arquivo de configuração do git (caso use controle de versão)
+```
