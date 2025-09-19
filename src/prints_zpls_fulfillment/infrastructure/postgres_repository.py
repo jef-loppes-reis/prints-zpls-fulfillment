@@ -33,7 +33,7 @@ class PostgresRepository(ProductRepository):
                     LEFT JOIN
                         "ECOMM".ml_info ON etiqueta_full.cod_ml = ml_info.inventory_id
                     WHERE
-                        etiqueta_full.ean ILIKE '%{barcode}'
+                        etiqueta_full.ean ~* '{barcode}'
                         AND NOT etq_impressa
                     ORDER BY (etiqueta_full.etq_impressa, etiqueta_full.data_emissao)
                 """
