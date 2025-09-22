@@ -4,8 +4,7 @@ from datetime import datetime
 
 from pandas import DataFrame
 
-from ..repositories.handler_postgres import HandlerPostgres
-from ..entities.base_ean_siac import BaseEanSiac
+from prints_zpls_fulfillment.update_etiquetas_db.repositories.handler_postgres import HandlerPostgres
 
 class GerenciarEtiquetas:
 
