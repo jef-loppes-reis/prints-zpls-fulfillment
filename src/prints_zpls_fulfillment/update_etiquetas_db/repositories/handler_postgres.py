@@ -4,6 +4,7 @@ from pandas import DataFrame
 
 from prints_zpls_fulfillment.update_etiquetas_db.database.queries import queries
 from prints_zpls_fulfillment.update_etiquetas_db.entities.etiquetas import Etiqueta
+from prints_zpls_fulfillment.update_etiquetas_db.entities.base_ean_siac import BaseEanSiac
 from prints_zpls_fulfillment.update_etiquetas_db.repositories.i_repositorio_etiquetas import IRepositorioEtiquetas
 
 class HandlerPostgres(IRepositorioEtiquetas):
@@ -38,9 +39,23 @@ class HandlerPostgres(IRepositorioEtiquetas):
     def identificacao_ean(self) -> DataFrame:
         try:
             with Postgres() as db:
-                result = db.query(queries.get('ml_info', ''))
-                return result if result is not None else DataFrame()
-        except Exception:
+                df_ml_info = db.query(queries.get('ml_info', ''))
+                df_prd_gtin_siac = db.query(queries.get('prd_gtin_siac', ''))
+                if df_ml_info is not None and df_prd_gtin_siac is not None:
+                    result = df_ml_info.merge(df_prd_gtin_siac, on='codpro', how='left')
+                    results = []
+                    for item_id in result['item_id'].unique():
+                        _row = result.query('item_id == @item_id').reset_index(drop=True)
+                        results.append({
+                            'cod_ml': _row['cod_ml'].values[0],
+                            'ean': BaseEanSiac.set_base_ean_siac(_row['ean'].tolist())
+                        })
+                    result = DataFrame(results)
+                else:
+                    result = DataFrame()
+                return result
+        except Exception as e:
+            print(f'Erro ao identificar EANs: {e}')
             return DataFrame()
 
     def update_db(self, df_etiquetas: DataFrame):

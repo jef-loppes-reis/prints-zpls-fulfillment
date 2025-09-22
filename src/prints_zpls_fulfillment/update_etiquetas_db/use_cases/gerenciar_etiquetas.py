@@ -5,6 +5,7 @@ from datetime import datetime
 from pandas import DataFrame
 
 from ..repositories.handler_postgres import HandlerPostgres
+from ..entities.base_ean_siac import BaseEanSiac
 
 class GerenciarEtiquetas:
 
@@ -34,7 +35,7 @@ class GerenciarEtiquetas:
                     'zpl_code': etq_unica,
                     'zpl_code_data_validade': None,
                     'etq_impressa': False,
-                    'idx_etq': idx_etq
+                    'idx_etq': idx_etq,
                 })
                 rows_to_append.append(row_etq.copy())
                 idx_etq += 1
