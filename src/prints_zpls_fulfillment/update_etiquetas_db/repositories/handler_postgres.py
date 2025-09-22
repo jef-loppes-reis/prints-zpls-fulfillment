@@ -2,14 +2,14 @@
 from ecomm import Postgres
 from pandas import DataFrame
 
-from prints_zpls_fulfillment.update_etiquetas_db.db.queries import queries
+from prints_zpls_fulfillment.update_etiquetas_db.database.queries import queries
 from prints_zpls_fulfillment.update_etiquetas_db.entities.etiquetas import Etiqueta
 from prints_zpls_fulfillment.update_etiquetas_db.repositories.i_repositorio_etiquetas import IRepositorioEtiquetas
 
 class HandlerPostgres(IRepositorioEtiquetas):
 
     def __init__(self):
-        self.db: Postgres = None
+        self.db: Postgres | None = None
 
     def __enter__(self):
         self.db = Postgres()
@@ -38,7 +38,8 @@ class HandlerPostgres(IRepositorioEtiquetas):
     def identificacao_ean(self) -> DataFrame:
         try:
             with Postgres() as db:
-                return db.query(queries.get('ml_info', ''))
+                result = db.query(queries.get('ml_info', ''))
+                return result if result is not None else DataFrame()
         except Exception:
             return DataFrame()
 

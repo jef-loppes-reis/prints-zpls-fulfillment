@@ -7,7 +7,7 @@ from prints_zpls_fulfillment.interfaces.product_repository import ProductReposit
 class PostgresRepository(ProductRepository):
 
     def __init__(self):
-        self.db: Postgres = None
+        self.db: Postgres | None = None
 
     # Método para abrir a conexão com o banco de dados.
     def __enter__(self):
@@ -37,7 +37,14 @@ class PostgresRepository(ProductRepository):
                         AND NOT etq_impressa
                     ORDER BY (etiqueta_full.etq_impressa, etiqueta_full.data_emissao)
                 """
-                return self.db.query(query).head(1)
+                if self.db:
+                    _df = self.db.query(query)
+                    if _df is not None:
+                        _df = _df.head(1)
+                        if not _df.empty and _df is not None:
+                            return _df
+                    return DataFrame()
+                return DataFrame()
         except Exception as e:
             print(f"Erro durante a consulta do produto: {e}")
         return DataFrame()  # Retorna um DataFrame vazio em caso de erro
@@ -46,6 +53,7 @@ class PostgresRepository(ProductRepository):
     def update_product(self, update_query: str) -> None:
         try:
             with self:
-                self.db.query(update_query)
+                if self.db:
+                    self.db.query(update_query)
         except Exception as e:
             print(f"Erro durante a atualização do produto: {e}")

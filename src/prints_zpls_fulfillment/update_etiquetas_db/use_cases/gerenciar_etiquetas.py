@@ -4,8 +4,11 @@ from datetime import datetime
 
 from pandas import DataFrame
 
+from ..repositories.handler_postgres import HandlerPostgres
+
 class GerenciarEtiquetas:
-    def __init__(self, repositorio):
+
+    def __init__(self, repositorio: HandlerPostgres):
         self.repositorio = repositorio
 
     def carregar_etiquetas(self, path_etiqueta: str) -> str:
@@ -36,7 +39,11 @@ class GerenciarEtiquetas:
                 rows_to_append.append(row_etq.copy())
                 idx_etq += 1
         df = DataFrame(rows_to_append)
-        df_merge = df.merge(self.repositorio.identificacao_ean()[['cod_ml', 'ean']], on='cod_ml', how='left')
+        df_merge = df.merge(
+            self.repositorio.identificacao_ean()[['cod_ml', 'ean']],
+            on='cod_ml',
+            how='left'
+        )
         return df_merge
 
     def atualizar_bd(self, df_etiquetas: DataFrame):

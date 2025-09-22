@@ -1,3 +1,4 @@
+"""---"""
 from prints_zpls_fulfillment.update_etiquetas_db.repositories.handler_postgres import HandlerPostgres
 from prints_zpls_fulfillment.update_etiquetas_db.use_cases.gerenciar_etiquetas import GerenciarEtiquetas
 
